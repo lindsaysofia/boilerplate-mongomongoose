@@ -45,7 +45,7 @@ var Schema = mongoose.Schema;
 var personSchema = new Schema({
   name: {type: String, required: true},
   age: Number,
-  favoriteFoods: Array
+  favoriteFoods: [String]
 });
 var Person = mongoose.model('Person', personSchema);
 
@@ -152,9 +152,10 @@ var findOneByFood = function(food, done) {
 // Use the function argument 'personId' as search key.
 
 var findPersonById = function(personId, done) {
-  
-  done(null/*, data*/);
-  
+  Person.findById(personId, (err, data) => {
+    if (err) return done(err);
+    return done(null, data);
+  });  
 };
 
 /** # CR[U]D part III - UPDATE # 
@@ -184,8 +185,14 @@ var findPersonById = function(personId, done) {
 
 var findEditThenSave = function(personId, done) {
   var foodToAdd = 'hamburger';
-  
-  done(null/*, data*/);
+  findPersonById(personId, (err, data) => {
+    if (err) return done(err);
+    data.favoriteFoods.push(foodToAdd);
+    data.save((err, data) => {
+      if (err) return done(err);
+      return done(null, data);
+    });
+  });
 };
 
 /** 9) New Update : Use `findOneAndUpdate()` */
