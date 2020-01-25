@@ -247,8 +247,10 @@ var removeById = function(personId, done) {
 
 var removeManyPeople = function(done) {
   var nameToRemove = "Mary";
-
-  done(null/*, data*/);
+  Person.remove({name: nameToRemove}, (err, data) => {
+    if (err) return done(err);
+    return done(null, data);
+  })
 };
 
 /** # C[R]UD part V -  More about Queries # 
@@ -271,8 +273,10 @@ var removeManyPeople = function(done) {
 
 var queryChain = function(done) {
   var foodToSearch = "burrito";
-  
-  done(null/*, data*/);
+  Person.find({favoriteFoods: foodToSearch}).sort({'name': 'asc'}).limit(2).select('name favoriteFoods').exec((err, data) => {
+    if (err) return done(err);
+    return done(null, data);
+  })
 };
 
 /** **Well Done !!**
